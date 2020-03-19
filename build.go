@@ -231,7 +231,7 @@ func (b *Build) Stop() (bool, error) {
 		if err != nil {
 			return false, err
 		}
-		return response.StatusCode == 200, nil
+		return response.StatusCode == 200 || response.StatusCode == 201, nil
 	}
 	return true, nil
 }

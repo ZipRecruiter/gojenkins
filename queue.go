@@ -103,7 +103,7 @@ func (t *Task) Cancel() (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	return response.StatusCode == 200, nil
+	return response.StatusCode == 200 || response.StatusCode == 201, nil
 }
 
 func (t *Task) GetJob() (*Job, error) {
