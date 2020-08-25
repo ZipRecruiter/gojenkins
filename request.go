@@ -61,12 +61,12 @@ type Requester struct {
 }
 
 func (r *Requester) SetCrumb(ar *APIRequest) error {
+	if !r.CrumbEnabled {
+		return nil
+	}
 	crumbData := map[string]string{}
 	response, err := r.GetJSON("/crumbIssuer/api/json", &crumbData, nil)
 	if err != nil {
-		if !r.CrumbEnabled {
-			return nil
-		}
 		return err
 	}
 
