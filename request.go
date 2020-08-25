@@ -264,6 +264,9 @@ func (r *Requester) ReadRawResponse(response *http.Response, responseStruct inte
 func (r *Requester) ReadJSONResponse(response *http.Response, responseStruct interface{}) (*http.Response, error) {
 	defer response.Body.Close()
 
-	json.NewDecoder(response.Body).Decode(responseStruct)
+	err := json.NewDecoder(response.Body).Decode(responseStruct)
+	if err != nil {
+		return response, err
+	}
 	return response, nil
 }
