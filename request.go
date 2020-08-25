@@ -52,17 +52,21 @@ func NewAPIRequest(method string, endpoint string, payload io.Reader) *APIReques
 }
 
 type Requester struct {
-	Base      string
-	BasicAuth *BasicAuth
-	Client    *http.Client
-	CACert    []byte
-	SslVerify bool
+	Base         string
+	BasicAuth    *BasicAuth
+	Client       *http.Client
+	CACert       []byte
+	CrumbEnabled bool
+	SslVerify    bool
 }
 
 func (r *Requester) SetCrumb(ar *APIRequest) error {
 	crumbData := map[string]string{}
 	response, err := r.GetJSON("/crumbIssuer/api/json", &crumbData, nil)
 	if err != nil {
+		if !r.CrumbEnabled {
+			return nil
+		}
 		return err
 	}
 
@@ -266,6 +270,9 @@ func (r *Requester) ReadJSONResponse(response *http.Response, responseStruct int
 
 	err := json.NewDecoder(response.Body).Decode(responseStruct)
 	if err != nil {
+		if err == io.EOF {
+			return response, nil
+		}
 		return response, err
 	}
 	return response, nil

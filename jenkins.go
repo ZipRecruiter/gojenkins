@@ -558,13 +558,13 @@ func (j *Jenkins) Poll() (int, error) {
 // Creates a new Jenkins Instance
 // Optional parameters are: client, username, password or token
 // After creating an instance call init method.
-func CreateJenkins(client *http.Client, base string, auth ...interface{}) *Jenkins {
+func CreateJenkins(client *http.Client, base string, crumbEnabled bool, auth ...interface{}) *Jenkins {
 	j := &Jenkins{}
 	if strings.HasSuffix(base, "/") {
 		base = base[:len(base)-1]
 	}
 	j.Server = base
-	j.Requester = &Requester{Base: base, SslVerify: true, Client: client}
+	j.Requester = &Requester{Base: base, SslVerify: true, Client: client, CrumbEnabled: crumbEnabled}
 	if j.Requester.Client == nil {
 		j.Requester.Client = http.DefaultClient
 	}
